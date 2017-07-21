@@ -47,13 +47,11 @@
         };
         t.extend(t.defaults,opts);
 
-        var tag_num = document.querySelector('[data-role='+t.defaults.maxTagTip+']'),
-            tag_list = document.querySelectorAll('a.tag-list'),
-            tag_input = document.querySelector('[data-role='+t.defaults.inputTag+']'),
+        var tag_input = document.querySelector('[data-role='+t.defaults.inputTag+']'),
             tag_hot = document.querySelector('[data-role='+t.defaults.hotTag+']');
 
         //初始化
-        tag_num.innerHTML = t.defaults.maxTag - tag_list.length;
+        t.updateNum();
         if(t.defaults.insertType == 13){
             tag_input.setAttribute('placeholder','输入标签内容后按回车添加')
         }else{
@@ -69,13 +67,16 @@
     TagSdk.prototype.insertTag = function () {
         var t = this,
             tag_list = document.querySelectorAll('a.tag-list'),
-            tag_num = document.querySelector('[data-role='+t.defaults.maxTagTip+']'),
             tag_input = document.querySelector('[data-role='+t.defaults.inputTag+']');
         tag_input.addEventListener('keyup',function (e) {
             var event = e|| window.e,
                 keyword,
                 el = this,
                 insertFlag = true;
+            //判断是否必须填写标签
+            if(!t.defaults.emptyFlag && el.value == ""){
+                t.userAlert(t.defaults.inputError);
+            }
             if(event.keyCode == t.defaults.insertType){
                 keyword = el.value;
                 if(keyword != ""){
@@ -98,8 +99,7 @@
                             tag.setAttribute('class','tag-list');
 
                             el.parentNode.insertBefore(tag,el);
-                            tag_list = document.querySelectorAll('a.tag-list');
-                            tag_num.innerHTML = t.defaults.maxTag - tag_list.length;
+                            t.updateNum();
                             el.value = "";
                             el.focus();
                         }
@@ -119,7 +119,6 @@
 
     TagSdk.prototype.deleteTag = function () {
         var t = this,
-            tag_num = document.querySelector('[data-role='+t.defaults.maxTagTip+']'),
             tag_input = document.querySelector('[data-role='+t.defaults.inputTag+']');
         tag_input.addEventListener('keydown',function (e) {
             var event = e|| window.e,
@@ -133,12 +132,38 @@
                 if(el.value == ""){
                     var tag_list = document.querySelectorAll('a.tag-list');
                     tag_list[tag_list.length-1].parentNode.removeChild(tag_list[tag_list.length-1]);
-                    tag_list = document.querySelectorAll('a.tag-list')
-                    tag_num.innerHTML = t.defaults.maxTag - tag_list.length;
+                    t.updateNum();
+                    if((!t.defaults.emptyFlag) && (document.querySelectorAll('a.tag-list').length ==0)){
+                        t.userAlert(t.defaults.inputError);
+                    }
                 }
             }
         },false)
+
+        tag_input.parentNode.addEventListener('click',function (e) {
+            var event = e|| window.e,
+                target = event.target || event.srcElement,
+                el = this;
+            if(target.nodeName.toLowerCase() == 'a'){
+                el.removeChild(target);
+                t.updateNum();
+                if((!t.defaults.emptyFlag) && (document.querySelectorAll('a.tag-list').length ==0)){
+                    t.userAlert(t.defaults.inputError);
+                }
+            }
+        })
+
+
     };
+    /**
+     * 更新数字
+     */
+    TagSdk.prototype.updateNum = function () {
+        var t = this;
+        var tag_num = document.querySelector('[data-role='+t.defaults.maxTagTip+']'),
+            tag_list = document.querySelectorAll('a.tag-list');
+        tag_num.innerHTML = t.defaults.maxTag - tag_list.length;
+    }
     /**
      * 用户提示
      * @param str
