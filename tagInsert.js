@@ -77,17 +77,23 @@
             if(e.keyCode == t.defaults.insertType){
                 keyword = el.value;
                 if(keyword != ""){
+                    if(tag_list.length<10){
+                        if(tag_list.length >0){
+                            //如果已有标签，则去重
+                            [].forEach.call(tag_list,function (i) {
+                                if(i.innerText == keyword)insertFlag = false;
+                            })
+                        }
 
-                    if(tag_list.length >0){
-                        //如果已有标签，则去重
-                       [].forEach.call(tag_list,function (i) {
-                           if(i.innerText == keyword)insertFlag = false;
-                       })
+                        if(keyword.length>t.defaults.maxTagLength){
+                            t.userAlert("标签字数超过"+t.defaults.maxTagLength+'字，请重新输入！');
+                        }
+                    }else{
+                        t.userAlert(t.defaults.numError);
+                        return;
                     }
-
-                    if(keyword.length>t.defaults.maxTagLength){
-                        t.userAlert("标签字数超过"+t.defaults.maxTagLength+'字，请重新输入！');
-                    }
+                }else{
+                    t.userAlert(t.defaults.inputError);
                 }
             }
         })
@@ -104,7 +110,6 @@
             var  tag_alert = document.querySelector('[data-role='+t.defaults.alertTag+']');
             tag_alert.innerHTML = str;
         }
-
     }
 
 
