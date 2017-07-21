@@ -57,23 +57,27 @@
      * @param opts 参数
      * @param {number} insertType - 输入标签的方式，13为回车，32为空格，如果选择32，则输入的标签不能允许有空格
      * @param {number} maxTag - 允许插入的标签数量
+     * @param {number} maxTagLength - 标签字数限制
      * @param {string} maxTagTip - 可插入标签数量提示容器
      * @param {string} alertTag - 标签相关提示容器，如果为alert，则直接弹出系统提示框
      * @param {string} hotTag - 推荐标签
      * @param {string} inputTag - 输入标签为空的提示
      * @param {string} lengthError - 超过限制标签数量提示
      * @param {string} exitError - 标签去重提示
+     * @param {bollean} emptyFlag - 是否必须填标签
      */
     TagSdk.tagInit({
             insertType:13,
             maxTag:20,
+            maxTagLength:20,
             maxTagTip:'tag-num',
             alertTag:'tag-alert',
             hotTag:'tag-hot',
             inputTag:'tag-input',
             inputError:'请输入标签',
-            lengthError:'已超过限制标签数',
-            exitError:'已存在标签'
+            numError:'已超过限制标签数',
+            exitError:'已存在标签',
+            emptyFlag:false
     });
 ```
 
