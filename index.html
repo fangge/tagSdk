@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>标签组件</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="renderer" content="webkit">
+    <meta name="front-end" content="MrF">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="">
+    <!--[if lt IE 9]>
+    <script> (function(){ var tags=['header','footer','nav','section','article','aside'];for(var i in tags){document.createElement(tags[i]);}})()</script>
+    <![endif]-->
+    <style>
+        .tag-box{
+            border: 1px solid #eaeaea;
+            padding: 6px 8px;
+            background: 0 0;
+            resize: none;
+            overflow: auto;
+            height: 78px;
+            font-size: 14px;
+            width: 618px;
+            color: #333;
+        }
+        .tag-input{
+            background: none;
+            font-size: 14px;
+            width:172px;
+            border:0;
+        }
+        .tag-input:focus{
+            outline: 0;
+        }
+        .tag-list{
+            white-space: nowrap;
+            width: auto;
+            padding: 0 10px;
+            height: 23px;
+            line-height: 23px;
+            border: 1px solid #c3c6c9;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .tag-list:hover{
+            text-decoration: line-through;
+        }
+        .tag-list:before{
+            content:"#"
+        }
+        .tag-hot a{
+            padding: 0 5px;
+            cursor:pointer;
+        }
+        .tag-hot a:before{
+            content:"#";
+        }
+    </style>
+</head>
+<body>
+<!--组件示例-->
+<h1>标签</h1>
+<section class="tag-wrap">
+    <div class="tag-alert">标签提示：<span data-role="tag-alert"></span></div>
+    <div class="tag-num">剩余可插入标签数：<span data-role="tag-num"></span></div>
+    <div class="tag-hot" data-role="tag-hot">推荐标签：<a>魂斗罗手游</a><a>欢乐球吃球</a><a>坦克世界</a><a>战舰世界</a><a>蛇蛇争霸</a></div>
+    <div class="tag-box"><a class="tag-list">标签样式示例</a><input type="text" class="tag-input" value="" placeholder="" data-role="tag-input"></div>
+</section>
+<script src="tagInsert.js"></script>
+<script>
+    TagSdk.tagInit({
+        maxTag:10
+    });
+</script>
+</body>
+</html>
