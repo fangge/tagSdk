@@ -66,7 +66,7 @@
      */
     TagSdk.prototype.insertTag = function () {
         var t = this,
-            tag_list = document.querySelectorAll('a.tag-list'),
+            tag_list ,
             tag_input = document.querySelector('[data-role='+t.defaults.inputTag+']');
         tag_input.addEventListener('keyup',function (e) {
             var event = e|| window.e,
@@ -74,17 +74,21 @@
                 el = this,
                 insertFlag = true;
             //判断是否必须填写标签
-            if(!t.defaults.emptyFlag && el.value == ""){
+            if(!t.defaults.emptyFlag && el.value == "" && document.querySelectorAll('a.tag-list').length == 0){
                 t.userAlert(t.defaults.inputError);
             }
             if(event.keyCode == t.defaults.insertType){
                 keyword = el.value;
                 if(keyword != ""){
+                    tag_list = document.querySelectorAll('a.tag-list');
                     if(tag_list.length<10){
                         if(tag_list.length >0){
                             //如果已有标签，则去重
                             [].forEach.call(tag_list,function (i) {
-                                if(i.innerText == keyword)insertFlag = false;
+                                if(i.innerText == keyword){
+                                    insertFlag = false;
+                                    t.userAlert(t.defaults.exitError);
+                                }
                             })
                         }
 
