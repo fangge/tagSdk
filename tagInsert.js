@@ -50,7 +50,7 @@
         var tag_num = document.querySelector('[data-role='+t.defaults.maxTagTip+']'),
             tag_list = document.querySelectorAll('a.tag-list'),
             tag_input = document.querySelector('[data-role='+t.defaults.inputTag+']'),
-              tag_hot = document.querySelector('[data-role='+t.defaults.hotTag+']');
+            tag_hot = document.querySelector('[data-role='+t.defaults.hotTag+']');
 
         //初始化
         tag_num.innerHTML = t.defaults.maxTag - tag_list.length;
@@ -60,6 +60,7 @@
             tag_input.setAttribute('placeholder','输入标签内容后按空格添加')
         }
         t.insertTag();
+        t.deleteTag();
     };
     /**
      * 插入标签
@@ -68,13 +69,14 @@
     TagSdk.prototype.insertTag = function () {
         var t = this,
             tag_list = document.querySelectorAll('a.tag-list'),
+            tag_num = document.querySelector('[data-role='+t.defaults.maxTagTip+']'),
             tag_input = document.querySelector('[data-role='+t.defaults.inputTag+']');
         tag_input.addEventListener('keyup',function (e) {
             var event = e|| window.e,
                 keyword,
                 el = this,
                 insertFlag = true;
-            if(e.keyCode == t.defaults.insertType){
+            if(event.keyCode == t.defaults.insertType){
                 keyword = el.value;
                 if(keyword != ""){
                     if(tag_list.length<10){
@@ -87,6 +89,19 @@
 
                         if(keyword.length>t.defaults.maxTagLength){
                             t.userAlert("标签字数超过"+t.defaults.maxTagLength+'字，请重新输入！');
+                            return;
+                        }
+
+                        if(insertFlag){
+                            var tag = document.createElement('a');
+                            tag.appendChild(document.createTextNode(keyword));
+                            tag.setAttribute('class','tag-list');
+
+                            el.parentNode.insertBefore(tag,el);
+                            tag_list = document.querySelectorAll('a.tag-list');
+                            tag_num.innerHTML = t.defaults.maxTag - tag_list.length;
+                            el.value = "";
+                            el.focus();
                         }
                     }else{
                         t.userAlert(t.defaults.numError);
@@ -96,8 +111,34 @@
                     t.userAlert(t.defaults.inputError);
                 }
             }
-        })
+        },false)
+
+
+
     }
+
+    TagSdk.prototype.deleteTag = function () {
+        var t = this,
+            tag_num = document.querySelector('[data-role='+t.defaults.maxTagTip+']'),
+            tag_input = document.querySelector('[data-role='+t.defaults.inputTag+']');
+        tag_input.addEventListener('keydown',function (e) {
+            var event = e|| window.e,
+                el = this;
+            //判断是否必须填写标签
+            if(!t.defaults.emptyFlag){
+                //如果必须填标签
+                if(t.defaults.alertTag != "alert")document.querySelector('[data-role='+t.defaults.alertTag+']').innerHTML = "";
+            }
+            if(event.keyCode == 8){
+                if(el.value == ""){
+                    var tag_list = document.querySelectorAll('a.tag-list');
+                    tag_list[tag_list.length-1].parentNode.removeChild(tag_list[tag_list.length-1]);
+                    tag_list = document.querySelectorAll('a.tag-list')
+                    tag_num.innerHTML = t.defaults.maxTag - tag_list.length;
+                }
+            }
+        },false)
+    };
     /**
      * 用户提示
      * @param str
